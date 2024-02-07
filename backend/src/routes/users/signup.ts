@@ -6,7 +6,6 @@ const db = require("../../db/mysql.ts");
 
 exports.signup = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, name } = req.body;
-    console.log(email, ",", password, ",", name);
     const saltRounds = 10;
     try {
         // bcrypt로 비밀번호 암호화 하기
@@ -21,7 +20,7 @@ exports.signup = async (req: Request, res: Response, next: NextFunction) => {
             function (err: QueryError, result: ResultSetHeader) {
                 if (err) console.log("query is not excuted: " + err);
                 else {
-                    res.redirect("/users/login");
+                    res.redirect("http://localhost:3000/users/login");
                 }
             }
         );

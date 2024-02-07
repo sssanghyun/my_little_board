@@ -15,19 +15,25 @@ exports.login = async (req: Request, res: Response, next: NextFunction) => {
             const user_id = result[0].user_no;
             const hash_password = result[0].password;
             const check = await bcrypt.compare(password, hash_password);
-
-            if (check) {
-                console.log(typeof result[0].user_no);
-
-                req.session.uid = user_id;
-                console.log(req.session.uid);
-                console.log("로그인 성공");
+            if (req.session.isLogined) {
                 res.redirect("/");
+                // res.send("이미 로그인");
             } else {
-                console.log("로그인 실패");
-            }
+                if (check) {
+                    console.log("로그인 성공");
 
-            // res.send(result);
+                    req.session.uid = user_id;
+                    req.session.isLogined = true;
+                    req.session.save(() => {
+                        res.json({
+                            uid: req.session.uid,
+                            isLogined: req.session.isLogined,
+                        });
+                    });
+                } else {
+                    console.log("로그인 실패");
+                }
+            }
         }
     });
 };
